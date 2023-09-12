@@ -6,6 +6,7 @@ export type SessionData = {
   jobTitle: string;
   email: string;
   username: string;
+  initials: string;
 };
 
 type SessionFlashData = {
