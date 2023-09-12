@@ -5,7 +5,8 @@
     "build": "remix build",
     "dev": "remix dev",
     "start": "remix-serve build",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "format": "npx prettier . --write"
   },
   "dependencies": {
     "@azure/msal-node": "^2.1.0",
