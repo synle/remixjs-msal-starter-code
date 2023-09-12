@@ -1,41 +1,43 @@
-import type { V2_MetaFunction } from "@remix-run/node";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
-export const meta: V2_MetaFunction = () => {
-  return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
-  ];
-};
+import type { SessionData } from "~/utils/backend/Session";
 
 export default function Index() {
+  const [loading, setLoading] = useState(true);
+  const [profile, setProfile] = useState<SessionData | undefined>();
+
+  useEffect(() => {
+    async function _fetch() {
+      try {
+        const { data: newProfile } = await axios.get<SessionData>(
+          `/api/auth/me`
+        );
+        setProfile(newProfile);
+      } finally {
+        setLoading(false);
+      }
+    }
+    _fetch();
+  }, []);
+
+  if (loading) {
+    return <h2>Loading...</h2>;
+  }
+
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-      <h1>Welcome to Remix</h1>
-      <ul>
-        <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/blog"
-            rel="noreferrer"
-          >
-            15m Quickstart Blog Tutorial
-          </a>
-        </li>
-        <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/jokes"
-            rel="noreferrer"
-          >
-            Deep Dive Jokes App Tutorial
-          </a>
-        </li>
-        <li>
-          <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
-            Remix Docs
-          </a>
-        </li>
-      </ul>
+      {profile ? (
+        <h2>
+          Welcome back, {profile.fullName}! Click here to{" "}
+          <a href="/api/auth/logout">log out</a>.
+        </h2>
+      ) : (
+        <h2>
+          You are not authenticated, click{" "}
+          <a href="/api/auth/login">here to log in</a>.
+        </h2>
+      )}
     </div>
   );
 }
