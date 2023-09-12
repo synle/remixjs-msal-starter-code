@@ -1,4 +1,5 @@
 import { createCookieSessionStorage } from "@remix-run/node"; // or cloudflare/deno
+import { CLIENT_SECRET } from "~/utils/backend/SSO";
 
 export type SessionData = {
   requestId: string;
@@ -28,7 +29,7 @@ const { getSession, commitSession, destroySession } =
       maxAge: 60,
       // path: "/",
       // sameSite: "lax",
-      // secrets: ["s3cret1"],
+      secrets: [CLIENT_SECRET || "s3cret1"],
       // secure: true,
     },
   });
