@@ -1,5 +1,6 @@
-import { useMeProfile } from "~/utils/frontend/Hooks";
+import { useMeProfile } from "~/utils/frontend/hooks/Auth";
 import DataTable, { ColumnFilter } from "~/components/DataTable";
+import { Paper } from "@mui/material";
 
 export default function Index() {
   const { data: profile, isLoading } = useMeProfile();
@@ -17,7 +18,9 @@ export default function Index() {
 
   return (
     <>
-      <pre>{JSON.stringify(profile, null, 2)}</pre>
+      <Paper>
+        <pre>{JSON.stringify(profile, null, 2)}</pre>
+      </Paper>
       <DataTable
         data={data}
         columns={[

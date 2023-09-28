@@ -22,12 +22,14 @@ import {
   Menu,
   MenuItem,
   Divider,
+  useMediaQuery,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { useMeProfile } from "~/utils/frontend/Hooks";
+import { useMeProfile } from "~/utils/frontend/hooks/Auth";
 import Loading from "~/components/Loading";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import ActionDialogsContext from "~/utils/frontend/hooks/ActionDialogs";
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
@@ -123,7 +125,8 @@ function App() {
                 open={Boolean(anchorEl)}
                 onClose={() => setAnchorEl(null)}
               >
-                <MenuItem>{meProfile.fullName}</MenuItem>
+                <MenuItem disabled>{meProfile.fullName}</MenuItem>
+                <MenuItem disabled>{meProfile.email}</MenuItem>
                 <Divider sx={{ my: 1 }} />
                 <MenuItem component={Link} href="/api/auth/logout">
                   Logout
@@ -151,6 +154,33 @@ function App() {
   );
 }
 
+function AppContextReducer(props: { children: JSX.Element | JSX.Element[] }) {
+  const contexts = [ActionDialogsContext];
+
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
+  const theme = useMemo(() => {
+    return createTheme({
+      palette: {
+        mode: prefersDarkMode ? "dark" : "light",
+      },
+    });
+  }, [prefersDarkMode]);
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        {contexts.reduceRight(
+          (acc, ContextProvider) => (
+            <ContextProvider>{acc}</ContextProvider>
+          ),
+          <>{props.children}</>
+        )}
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+}
+
 export default function () {
   return (
     <html lang="en">
@@ -162,12 +192,9 @@ export default function () {
       </head>
       <body>
         <CssBaseline />
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <App />
-          </ThemeProvider>
-        </QueryClientProvider>
+        <AppContextReducer>
+          <App />
+        </AppContextReducer>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

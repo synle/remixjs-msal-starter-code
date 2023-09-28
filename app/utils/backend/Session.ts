@@ -26,7 +26,7 @@ const { getSession, commitSession, destroySession } =
       // Note that this method is NOT recommended as `new Date` creates only one date on each server deployment, not a dynamic date in the future!
       // expires: new Date(Date.now() + 60_000),
       httpOnly: true,
-      maxAge: 60,
+      // maxAge: 60,
       // path: "/",
       // sameSite: "lax",
       secrets: [CLIENT_SECRET || "s3cret1"],
