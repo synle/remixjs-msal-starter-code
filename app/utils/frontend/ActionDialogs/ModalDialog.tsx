@@ -1,43 +1,47 @@
+import React from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import IconButton from "@mui/material/IconButton";
-import { Box } from "@mui/material";
+import {
+  Box,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+} from "@mui/material";
+import { ReactNode } from "react";
+import { BaseDialogInput } from "./types";
 
-export type ModalInput = {
-  title: string;
+export type ModalInput = BaseDialogInput & {
   /**
    * body of the modal
-   * @type {[type]}
    */
-  message: JSX.Element;
+  message: ReactNode;
   showCloseButton?: boolean;
   disableBackdropClick?: boolean;
   size: "xs" | "sm" | "md" | "lg";
 };
 
-type ModalProps = ModalInput & {
-  open: boolean;
-  onDismiss: () => void;
-};
-
-export default function Modal(props: ModalProps): JSX.Element | null {
+export default function Modal(
+  props: ModalInput & {
+    open: boolean;
+    onDismiss: () => void;
+  }
+) {
   const onBackdropClick = () => {
     if (props.disableBackdropClick !== true) {
       props.onDismiss();
     }
   };
+
   return (
     <Dialog
       open={props.open}
       onClose={onBackdropClick}
-      aria-labelledby="modal-dialog-title"
-      aria-describedby="modal-dialog-description"
       fullWidth={true}
       maxWidth={props.size}
+      aria-labelledby={`dialog-title-${props.id}`}
+      aria-describedby={`dialog-description-${props.id}`}
     >
-      <DialogTitle id="modal-dialog-title">
+      <DialogTitle id={`dialog-title-${props.id}`}>
         {props.title}
         {props.showCloseButton && (
           <IconButton
@@ -54,7 +58,7 @@ export default function Modal(props: ModalProps): JSX.Element | null {
           </IconButton>
         )}
       </DialogTitle>
-      <DialogContent>
+      <DialogContent id={`dialog-description-${props.id}`}>
         <Box sx={{ pt: 1 }}>{props.message}</Box>
       </DialogContent>
     </Dialog>

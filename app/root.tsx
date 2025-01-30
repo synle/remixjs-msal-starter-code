@@ -29,7 +29,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { useMeProfile } from "~/utils/frontend/hooks/Auth";
 import Loading from "~/components/Loading";
 import { useState, useMemo } from "react";
-import ActionDialogsContext from "~/utils/frontend/hooks/ActionDialogs";
+import { ActionDialogsContext } from "~/utils/frontend/ActionDialogs";
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
@@ -97,7 +97,7 @@ function App() {
     );
   } else {
     const linkStyles = {
-      color: "background.default",
+      color: "white",
       fontWeight: "bold",
     };
 
@@ -105,12 +105,15 @@ function App() {
       <>
         <AppBar position="static">
           <Toolbar sx={{ display: "flex", gap: 2 }}>
-            <Link href="/" sx={{ marginRight: "auto" }} underline="hover">
-              <Typography variant="h5" sx={linkStyles}>
-                Sample App
-              </Typography>
-            </Link>
-            <Box>
+            <Box sx={{ display: "flex", gap: 2 }}>
+              <Link href="/" underline="hover">
+                <Typography variant="h6" sx={linkStyles}>
+                  Sample App
+                </Typography>
+              </Link>
+              {/* TODO: add more links / button if needed*/}
+            </Box>
+            <Box sx={{ marginLeft: "auto" }}>
               <IconButton
                 aria-label="profile"
                 aria-controls="current-user-profile-menu"

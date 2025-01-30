@@ -1,33 +1,33 @@
+import React, { ReactNode } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import IconButton from "@mui/material/IconButton";
-import TextField from "@mui/material/TextField";
-import React, { useState } from "react";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  TextField,
+} from "@mui/material";
+import { SyntheticEvent, useState } from "react";
+import { BaseDialogInput } from "./types";
 
-export type PromptInput = {
-  title?: string;
-  message: string;
+export type PromptInput = BaseDialogInput & {
+  message: ReactNode;
   value?: string;
   isLongPrompt?: boolean;
   saveLabel?: string;
-  languageMode?: string;
   required?: boolean;
   readonly?: boolean;
 };
 
-type PromptDialogProps = PromptInput & {
-  open: boolean;
-  onSaveClick: (newValue: string) => void;
-  onDismiss: () => void;
-};
-
 export default function PromptDialog(
-  props: PromptDialogProps
-): JSX.Element | null {
+  props: PromptInput & {
+    open: boolean;
+    onSaveClick: (newValue: string) => void;
+    onDismiss: () => void;
+  }
+) {
   const [value, setValue] = useState(props.value || "");
 
   const handleClose = (forceClose = false) => {
@@ -39,7 +39,7 @@ export default function PromptDialog(
     props.onDismiss();
   };
 
-  const onSave = (e: React.SyntheticEvent) => {
+  const onSave = (e: SyntheticEvent) => {
     e.preventDefault();
     if (props.required && !value) {
       // needs to fill out an input
@@ -54,14 +54,15 @@ export default function PromptDialog(
   return (
     <Dialog
       onClose={() => handleClose(false)}
-      aria-labelledby="prompt-dialog-title"
       open={props.open}
       fullWidth={true}
       maxWidth={props.isLongPrompt ? "lg" : "sm"}
+      aria-labelledby={`dialog-title-${props.id}`}
+      aria-describedby={`dialog-description-${props.id}`}
     >
       <form onSubmit={onSave}>
-        <DialogTitle id="prompt-dialog-title">
-          {props.title || "Prompt"}
+        <DialogTitle id={`dialog-title-${props.id}`}>
+          {props.title}
           <IconButton
             aria-label="close"
             onClick={() => handleClose(true)}
@@ -75,7 +76,7 @@ export default function PromptDialog(
             <CloseIcon />
           </IconButton>
         </DialogTitle>
-        <DialogContent dividers>
+        <DialogContent dividers id={`dialog-description-${props.id}`}>
           {props.isLongPrompt ? (
             <TextField
               label={props.message}
@@ -103,8 +104,8 @@ export default function PromptDialog(
           <DialogActions
             sx={{ display: "flex", gap: 2, justifyContent: "end" }}
           >
-            <Button type="submit" disabled={isDisabled}>
-              {props.saveLabel || "Save Changes"}
+            <Button type="submit" disabled={isDisabled} variant="contained">
+              {props.saveLabel || "Save"}
             </Button>
           </DialogActions>
         )}

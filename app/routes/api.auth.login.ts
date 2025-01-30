@@ -19,8 +19,8 @@ export async function loader(args: LoaderArgs) {
       redirectUri = process.env.AAD_REDIRECT_URL
         ? process.env.AAD_REDIRECT_URL
         : url.host.includes("localhost")
-          ? `${url.protocol}//${url.host}`
-          : `https://${url.host}`;
+        ? `${url.protocol}//${url.host}`
+        : `https://${url.host}`;
     } catch (err) {}
   }
 
