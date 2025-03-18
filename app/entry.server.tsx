@@ -4,6 +4,9 @@
  * For more information, see https://remix.run/file-conventions/entry.server
  */
 
+// @ts-ignore
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+
 import { PassThrough } from "node:stream";
 
 import type { AppLoadContext, EntryContext } from "@remix-run/node";
