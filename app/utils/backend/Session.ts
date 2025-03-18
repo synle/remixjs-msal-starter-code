@@ -1,13 +1,10 @@
 import { createCookieSessionStorage } from "@remix-run/node"; // or cloudflare/deno
+import type { User } from "~/types.d.ts";
 import { CLIENT_SECRET } from "~/utils/backend/SSO";
 
 export type SessionData = {
-  requestId: string;
-  fullName: string;
-  jobTitle: string;
-  email: string;
-  username: string;
-  initials: string;
+  access_token: string;
+  user: User;
 };
 
 type SessionFlashData = {
@@ -34,4 +31,4 @@ const { getSession, commitSession, destroySession } =
     },
   });
 
-export { getSession, commitSession, destroySession };
+export { commitSession, destroySession, getSession };

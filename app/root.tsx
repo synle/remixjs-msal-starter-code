@@ -1,3 +1,20 @@
+import {
+  AppBar,
+  Avatar,
+  Box,
+  Button,
+  CssBaseline,
+  Divider,
+  IconButton,
+  Link,
+  Menu,
+  MenuItem,
+  Paper,
+  Toolbar,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { cssBundleHref } from "@remix-run/css-bundle";
 import type { LinksFunction } from "@remix-run/node";
 import {
@@ -8,28 +25,19 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import {
-  Box,
-  Button,
-  CssBaseline,
-  Paper,
-  Typography,
-  Link,
-  AppBar,
-  Toolbar,
-  IconButton,
-  Avatar,
-  Menu,
-  MenuItem,
-  Divider,
-  useMediaQuery,
-} from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useMemo, useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { useMeProfile } from "~/utils/frontend/hooks/Auth";
 import Loading from "~/components/Loading";
-import { useState, useMemo } from "react";
 import { ActionDialogsContext } from "~/utils/frontend/ActionDialogs";
+import { useMeProfile } from "~/utils/frontend/hooks/Auth";
+
+function _getInitials(fullName: string) {
+  const names = fullName.split(" ");
+  return names
+    .map((name) => name.charAt(0))
+    .join("")
+    .toUpperCase();
+}
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
@@ -58,14 +66,14 @@ const queryClient = new QueryClient({
 });
 
 function App() {
-  const { data: meProfile, isLoading } = useMeProfile();
+  const { data: profile, isLoading } = useMeProfile();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   let contentDom = <></>;
 
   if (isLoading) {
     contentDom = <Loading>Loading...</Loading>;
-  } else if (!meProfile) {
+  } else if (!profile) {
     contentDom = (
       <Box
         sx={{
@@ -101,6 +109,8 @@ function App() {
       fontWeight: "bold",
     };
 
+    const fullName = `${profile.displayName}`;
+
     contentDom = (
       <>
         <AppBar position="static">
@@ -120,7 +130,7 @@ function App() {
                 aria-haspopup="true"
                 onClick={(event) => setAnchorEl(event.currentTarget)}
               >
-                <Avatar>{meProfile.initials}</Avatar>
+                <Avatar>{_getInitials(fullName)}</Avatar>
               </IconButton>
               <Menu
                 id="current-user-profile-menu"
@@ -128,8 +138,8 @@ function App() {
                 open={Boolean(anchorEl)}
                 onClose={() => setAnchorEl(null)}
               >
-                <MenuItem disabled>{meProfile.fullName}</MenuItem>
-                <MenuItem disabled>{meProfile.email}</MenuItem>
+                <MenuItem disabled>{fullName}</MenuItem>
+                <MenuItem disabled>{profile.mail}</MenuItem>
                 <Divider sx={{ my: 1 }} />
                 <MenuItem component={Link} href="/api/auth/logout">
                   Logout
