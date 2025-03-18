@@ -1,7 +1,7 @@
-import { useMeProfile } from "~/utils/frontend/hooks/Auth";
+import { Box, Button, Paper } from "@mui/material";
+import { useActionDialogs } from "react-dialog-mui";
 import DataTable, { ColumnFilter } from "~/components/DataTable";
-import { Paper, Button, Box } from "@mui/material";
-import { useActionDialogs } from "~/utils/frontend/ActionDialogs";
+import { useMeProfile } from "~/utils/frontend/hooks/Auth";
 
 export default function Index() {
   const { data: profile, isLoading } = useMeProfile();

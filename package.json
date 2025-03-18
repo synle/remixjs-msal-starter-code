@@ -20,6 +20,7 @@
     "axios": "^1.7.9",
     "isbot": "^3.6.8",
     "react": "^18.2.0",
+    "react-dialog-mui": "^0.1.1",
     "react-dom": "^18.2.0",
     "react-query": "^3.39.3",
     "react-table": "^7.8.0"
