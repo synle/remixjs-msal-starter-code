@@ -124,16 +124,16 @@ No route code changes are required — the dynamic `:provider` segment dispatche
 
 ## Scripts
 
-| Command                 | What it does                                      |
-| ----------------------- | ------------------------------------------------- |
-| `npm run dev`           | Run the Remix dev server on http://localhost:3000 |
-| `npm run build`         | Build the production bundle into `build/`         |
-| `npm start`             | Serve the production bundle (`remix-serve build`) |
-| `npm test`              | Run vitest once                                   |
-| `npm run test:watch`    | Run vitest in watch mode                          |
-| `npm run test:coverage` | Run vitest with v8 coverage                       |
-| `npm run typecheck`     | Run TypeScript without emitting                   |
-| `npm run format`        | Run Prettier across the repo                      |
+| Command             | What it does                                      |
+| ------------------- | ------------------------------------------------- |
+| `npm run dev`       | Run the Remix dev server on http://localhost:3000 |
+| `npm run build`     | Build the production bundle into `build/`         |
+| `npm start`         | Serve the production bundle (`remix-serve build`) |
+| `npm test`          | Run vitest in watch mode (interactive)            |
+| `npm run test-ci`   | Run vitest once with coverage (used by CI)        |
+| `npm run coverage`  | Same as `test-ci` — alias                         |
+| `npm run typecheck` | Run TypeScript without emitting                   |
+| `npm run format`    | Run Prettier across the repo                      |
 
 ## Deployment
 
@@ -203,7 +203,10 @@ shim and lose streaming.
 
 #### GitHub repo setup
 
-Add these two **GitHub Actions secrets** (Settings → Secrets and variables → Actions):
+The workflow scopes its secrets to a GitHub **Environment** named
+`azure-production` so you can require manual approval before each deploy
+(Settings → Environments → New environment → "Required reviewers"). Define
+the secrets on that environment, not at the repo level:
 
 | Secret                         | Value                                                       |
 | ------------------------------ | ----------------------------------------------------------- |
@@ -211,9 +214,9 @@ Add these two **GitHub Actions secrets** (Settings → Secrets and variables →
 | `AZURE_WEBAPP_PUBLISH_PROFILE` | The full XML contents of `publish-profile.xml` from step 5. |
 
 The workflow at `.github/workflows/deploy-azure.yml` triggers on every push
-to `main` and on manual `workflow_dispatch`. It runs `npm ci`, `npm test`,
-`npm run build`, and then deploys the build artifact + dependencies to the
-named App Service.
+to `main` and on manual `workflow_dispatch`. It runs `npm ci`,
+`npm run test-ci`, `npm run build`, prunes dev deps, zips the artifact, and
+deploys to the named App Service.
 
 #### Rotating the publish profile
 

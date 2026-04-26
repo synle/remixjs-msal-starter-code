@@ -8,9 +8,9 @@
     "start": "remix-serve build",
     "typecheck": "tsc",
     "format": "npx prettier . --write",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test": "vitest --watch",
+    "test-ci": "vitest run --coverage",
+    "coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@azure/msal-node": "^2.1.0",
