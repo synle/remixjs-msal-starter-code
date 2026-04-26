@@ -31,6 +31,11 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import Loading from "~/components/Loading";
 import { useMeProfile } from "~/utils/frontend/hooks/Auth";
 
+/**
+ * Returns the upper-case initials of a full name (e.g. "Jane Doe" → "JD").
+ *
+ * Used to populate the avatar in the top-right user menu.
+ */
 function _getInitials(fullName: string) {
   const names = fullName.split(" ");
   return names
@@ -39,6 +44,7 @@ function _getInitials(fullName: string) {
     .toUpperCase();
 }
 
+/** Remix `links` export — wires in the css-bundle stylesheet when available. */
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
@@ -65,6 +71,14 @@ const queryClient = new QueryClient({
   },
 });
 
+/**
+ * Top-level app shell.
+ *
+ * Renders one of three states based on `useMeProfile()`:
+ * - loading spinner while the profile is being fetched
+ * - "Welcome back" + login button when no profile is returned (unauthenticated)
+ * - app bar with user menu + `<Outlet />` for the active route when authenticated
+ */
 function App() {
   const { data: profile, isLoading } = useMeProfile();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -95,9 +109,20 @@ function App() {
           <Typography sx={{ marginBottom: 4 }}>
             You are not authenticated, please log in to continue.
           </Typography>
-          <Box>
-            <Button variant="contained" component={Link} href="/api/auth/login">
-              Log in
+          <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+            <Button
+              variant="contained"
+              component={Link}
+              href="/api/auth/microsoft/login"
+            >
+              Log in with Microsoft
+            </Button>
+            <Button
+              variant="outlined"
+              component={Link}
+              href="/api/auth/google/login"
+            >
+              Log in with Google
             </Button>
           </Box>
         </Paper>
@@ -139,7 +164,7 @@ function App() {
                 onClose={() => setAnchorEl(null)}
               >
                 <MenuItem disabled>{fullName}</MenuItem>
-                <MenuItem disabled>{profile.mail}</MenuItem>
+                <MenuItem disabled>{profile.email}</MenuItem>
                 <Divider sx={{ my: 1 }} />
                 <MenuItem component={Link} href="/api/auth/logout">
                   Logout
@@ -167,6 +192,12 @@ function App() {
   );
 }
 
+/**
+ * Wraps children with the React Query, MUI ThemeProvider, and ActionDialogs contexts.
+ *
+ * Computes the MUI palette from the user's `prefers-color-scheme` media query and
+ * defers rendering until after the first effect tick to avoid SSR/CSR theme mismatch.
+ */
 function AppContextReducer(props: { children: JSX.Element | JSX.Element[] }) {
   const contexts = [ActionDialogsContext];
 
@@ -204,6 +235,11 @@ function AppContextReducer(props: { children: JSX.Element | JSX.Element[] }) {
   );
 }
 
+/**
+ * Remix root — the only HTML document the app produces. All route content is
+ * rendered through `<App />` → `<Outlet />`. Wraps children in `AppContextReducer`
+ * so every route inherits the React Query, MUI theme, and dialog contexts.
+ */
 export default function () {
   return (
     <html lang="en">

@@ -1,7 +1,12 @@
+/** Route loader for `/api/auth/me` — returns the authenticated user's Graph profile or a 401. */
 import type { LoaderArgs } from "@remix-run/node";
 import { LoaderFunction, Response } from "@remix-run/node";
 import { getSession } from "~/utils/backend/Session";
 
+/**
+ * Returns the user's persisted Graph profile from the session cookie when present,
+ * otherwise responds with HTTP 401. Used by the `useMeProfile` frontend hook.
+ */
 export const loader: LoaderFunction = async (args: LoaderArgs) => {
   const { request } = args;
   try {

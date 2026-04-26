@@ -1,0 +1,77 @@
+name: deploy-azure
+
+# Build and deploy to Azure App Service (Linux, Node 20).
+#
+# Triggers:
+#   - push to main (auto-deploy)
+#   - workflow_dispatch (manual re-deploy from the Actions tab)
+#
+# Required repo secrets (Settings → Secrets and variables → Actions):
+#   - AZURE_WEBAPP_NAME            : the App Service name (e.g. "remix-sso-starter")
+#   - AZURE_WEBAPP_PUBLISH_PROFILE : full XML from
+#       `az webapp deployment list-publishing-profiles --xml`
+#
+# Application settings (SESSION_SECRET, AAD_SSO_*, GOOGLE_OAUTH_*, etc.) live
+# on the App Service itself, NOT here — see README → "Azure deployment".
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Don't pile up deploys if commits land in quick succession; let the latest win.
+concurrency:
+  group: deploy-azure
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "20.x"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        # Fail fast if anything regresses before we ship to Azure.
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Prune dev dependencies
+        # App Service runs the artifact as-is — strip dev deps to shrink the
+        # zip and keep the runtime install slim.
+        run: npm prune --omit=dev
+
+      - name: Package artifact
+        # Bundle source + build output + production node_modules. Excludes
+        # the .git history and the workflow file itself.
+        run: |
+          zip -r release.zip . \
+            -x ".git/*" \
+            -x ".github/*" \
+            -x "coverage/*" \
+            -x "*.env" \
+            -x ".env*"
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: release.zip

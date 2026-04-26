@@ -5,7 +5,7 @@
   "scripts": {
     "build": "remix build",
     "dev": "remix dev",
-    "start": "node index.mjs",
+    "start": "remix-serve build",
     "typecheck": "tsc",
     "format": "npx prettier . --write",
     "test": "vitest run",
