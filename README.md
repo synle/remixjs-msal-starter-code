@@ -42,10 +42,10 @@ App Service "Configuration", GitHub Actions secrets, etc.).
 
 ### Session
 
-| Var               | Required        | Purpose                                                                                                            |
-| ----------------- | --------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `SESSION_SECRET`  | Production: yes | Secret used to sign the `__session` and `__auth_state` cookies. Use a random 32+ byte string. Required in `NODE_ENV=production`. |
-| `NODE_ENV`        | yes             | Set to `production` on the deployed host so secure cookies + hard-fail on missing secret kick in.                  |
+| Var              | Required        | Purpose                                                                                                                          |
+| ---------------- | --------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `SESSION_SECRET` | Production: yes | Secret used to sign the `__session` and `__auth_state` cookies. Use a random 32+ byte string. Required in `NODE_ENV=production`. |
+| `NODE_ENV`       | yes             | Set to `production` on the deployed host so secure cookies + hard-fail on missing secret kick in.                                |
 
 If `SESSION_SECRET` is not set, the app falls back to `AAD_SSO_CLIENT_VALUE`
 (legacy) and finally to a known-bad literal `"s3cret1"` — the literal is
@@ -53,13 +53,13 @@ If `SESSION_SECRET` is not set, the app falls back to `AAD_SSO_CLIENT_VALUE`
 
 ### Microsoft / Azure AD
 
-| Var                     | Required | Purpose                                                                                                  |
-| ----------------------- | -------- | -------------------------------------------------------------------------------------------------------- |
-| `AAD_SSO_CLIENT_ID`     | yes      | App registration (client) id from Azure Portal → Azure AD → App registrations → your app → Overview.     |
-| `AAD_SSO_CLIENT_VALUE`  | yes      | Client secret value from your app's "Certificates & secrets" tab.                                        |
-| `AAD_SSO_TENANT_ID`     | no       | Tenant guid. Defaults to `common` (multi-tenant + personal MS accounts).                                 |
-| `MICROSOFT_REDIRECT_URL`| no       | Full URL (incl. callback path) to use as `redirect_uri`. Overrides every other resolution rule below.    |
-| `AAD_REDIRECT_URL`      | no       | Legacy alias for `MICROSOFT_REDIRECT_URL`. Kept for back-compat.                                         |
+| Var                      | Required | Purpose                                                                                               |
+| ------------------------ | -------- | ----------------------------------------------------------------------------------------------------- |
+| `AAD_SSO_CLIENT_ID`      | yes      | App registration (client) id from Azure Portal → Azure AD → App registrations → your app → Overview.  |
+| `AAD_SSO_CLIENT_VALUE`   | yes      | Client secret value from your app's "Certificates & secrets" tab.                                     |
+| `AAD_SSO_TENANT_ID`      | no       | Tenant guid. Defaults to `common` (multi-tenant + personal MS accounts).                              |
+| `MICROSOFT_REDIRECT_URL` | no       | Full URL (incl. callback path) to use as `redirect_uri`. Overrides every other resolution rule below. |
+| `AAD_REDIRECT_URL`       | no       | Legacy alias for `MICROSOFT_REDIRECT_URL`. Kept for back-compat.                                      |
 
 **Where to register the redirect URI in Azure:**
 
@@ -72,11 +72,11 @@ If `SESSION_SECRET` is not set, the app falls back to `AAD_SSO_CLIENT_VALUE`
 
 ### Google
 
-| Var                            | Required | Purpose                                                                                              |
-| ------------------------------ | -------- | ---------------------------------------------------------------------------------------------------- |
-| `GOOGLE_OAUTH_CLIENT_ID`       | yes      | OAuth 2.0 Client ID from Google Cloud Console → APIs & Services → Credentials.                       |
-| `GOOGLE_OAUTH_CLIENT_SECRET`   | yes      | Matching client secret.                                                                              |
-| `GOOGLE_REDIRECT_URL`          | no       | Full URL to use as `redirect_uri`. Overrides the request-based resolution.                           |
+| Var                          | Required | Purpose                                                                        |
+| ---------------------------- | -------- | ------------------------------------------------------------------------------ |
+| `GOOGLE_OAUTH_CLIENT_ID`     | yes      | OAuth 2.0 Client ID from Google Cloud Console → APIs & Services → Credentials. |
+| `GOOGLE_OAUTH_CLIENT_SECRET` | yes      | Matching client secret.                                                        |
+| `GOOGLE_REDIRECT_URL`        | no       | Full URL to use as `redirect_uri`. Overrides the request-based resolution.     |
 
 **Where to register the redirect URI in Google Cloud:**
 
@@ -104,13 +104,13 @@ nice dev-time fallback but you should pin `(1)` or `(3)` in prod.
 
 ## Routes
 
-| URL                                       | Method   | What it does                                                       |
-| ----------------------------------------- | -------- | ------------------------------------------------------------------ |
-| `/api/auth/:provider/login`               | GET      | Begin OAuth flow for `:provider` (e.g. `microsoft`, `google`).     |
-| `/api/auth/:provider/login_callback`      | GET/POST | OAuth callback. POST for AAD (`response_mode=form_post`), GET for Google. |
-| `/api/auth/login`                         | GET      | Back-compat shim → redirects to `/api/auth/microsoft/login`.       |
-| `/api/auth/me`                            | GET      | Returns the normalized `AuthUser` from the session cookie, or 401. |
-| `/api/auth/logout`                        | GET      | Destroys the session cookie and redirects home.                    |
+| URL                                  | Method   | What it does                                                              |
+| ------------------------------------ | -------- | ------------------------------------------------------------------------- |
+| `/api/auth/:provider/login`          | GET      | Begin OAuth flow for `:provider` (e.g. `microsoft`, `google`).            |
+| `/api/auth/:provider/login_callback` | GET/POST | OAuth callback. POST for AAD (`response_mode=form_post`), GET for Google. |
+| `/api/auth/login`                    | GET      | Back-compat shim → redirects to `/api/auth/microsoft/login`.              |
+| `/api/auth/me`                       | GET      | Returns the normalized `AuthUser` from the session cookie, or 401.        |
+| `/api/auth/logout`                   | GET      | Destroys the session cookie and redirects home.                           |
 
 ## Adding a new provider
 
@@ -124,16 +124,16 @@ No route code changes are required — the dynamic `:provider` segment dispatche
 
 ## Scripts
 
-| Command            | What it does                                          |
-| ------------------ | ----------------------------------------------------- |
-| `npm run dev`      | Run the Remix dev server on http://localhost:3000     |
-| `npm run build`    | Build the production bundle into `build/`             |
-| `npm start`        | Serve the production bundle (`remix-serve build`)     |
-| `npm test`         | Run vitest once                                       |
-| `npm run test:watch` | Run vitest in watch mode                            |
-| `npm run test:coverage` | Run vitest with v8 coverage                      |
-| `npm run typecheck`| Run TypeScript without emitting                       |
-| `npm run format`   | Run Prettier across the repo                          |
+| Command                 | What it does                                      |
+| ----------------------- | ------------------------------------------------- |
+| `npm run dev`           | Run the Remix dev server on http://localhost:3000 |
+| `npm run build`         | Build the production bundle into `build/`         |
+| `npm start`             | Serve the production bundle (`remix-serve build`) |
+| `npm test`              | Run vitest once                                   |
+| `npm run test:watch`    | Run vitest in watch mode                          |
+| `npm run test:coverage` | Run vitest with v8 coverage                       |
+| `npm run typecheck`     | Run TypeScript without emitting                   |
+| `npm run format`        | Run Prettier across the repo                      |
 
 ## Deployment
 
@@ -151,6 +151,7 @@ shim and lose streaming.
 #### One-time Azure setup
 
 1. **Create the App Service**:
+
    ```bash
    az login
    az group create --name remix-sso-rg --location westus2
@@ -158,11 +159,13 @@ shim and lose streaming.
    az webapp create --resource-group remix-sso-rg --plan remix-sso-plan \
      --name <your-app-name> --runtime "NODE:20-lts"
    ```
+
    Pick a globally-unique `<your-app-name>`; it becomes
    `https://<your-app-name>.azurewebsites.net`.
 
 2. **Configure the startup command** (App Service runs `npm start` by default;
    we want the production bundle):
+
    ```bash
    az webapp config set --resource-group remix-sso-rg --name <your-app-name> \
      --startup-file "npm run start"
@@ -170,6 +173,7 @@ shim and lose streaming.
 
 3. **Set environment variables** on the App Service (these become
    `process.env.*` at runtime):
+
    ```bash
    az webapp config appsettings set --resource-group remix-sso-rg --name <your-app-name> \
      --settings \
@@ -184,6 +188,7 @@ shim and lose streaming.
    ```
 
 4. **Register the production redirect URIs** with both IdPs:
+
    - Azure AD → App registrations → your app → Authentication → Web →
      `https://<your-app-name>.azurewebsites.net/api/auth/microsoft/login_callback`
    - Google Cloud → Credentials → your OAuth client → Authorized redirect URIs →
@@ -200,10 +205,10 @@ shim and lose streaming.
 
 Add these two **GitHub Actions secrets** (Settings → Secrets and variables → Actions):
 
-| Secret                            | Value                                                            |
-| --------------------------------- | ---------------------------------------------------------------- |
-| `AZURE_WEBAPP_NAME`               | The `<your-app-name>` you chose above.                           |
-| `AZURE_WEBAPP_PUBLISH_PROFILE`    | The full XML contents of `publish-profile.xml` from step 5.      |
+| Secret                         | Value                                                       |
+| ------------------------------ | ----------------------------------------------------------- |
+| `AZURE_WEBAPP_NAME`            | The `<your-app-name>` you chose above.                      |
+| `AZURE_WEBAPP_PUBLISH_PROFILE` | The full XML contents of `publish-profile.xml` from step 5. |
 
 The workflow at `.github/workflows/deploy-azure.yml` triggers on every push
 to `main` and on manual `workflow_dispatch`. It runs `npm ci`, `npm test`,

@@ -71,10 +71,10 @@ than Azure Functions because Remix is a long-lived HTTP server.
 
 ### Required GitHub Actions secrets
 
-| Secret                          | What it is                                                                |
-| ------------------------------- | ------------------------------------------------------------------------- |
-| `AZURE_WEBAPP_NAME`             | The app name (e.g. `remix-sso-starter`). Becomes `<name>.azurewebsites.net`. |
-| `AZURE_WEBAPP_PUBLISH_PROFILE`  | Full XML from `az webapp deployment list-publishing-profiles --xml`.       |
+| Secret                         | What it is                                                                   |
+| ------------------------------ | ---------------------------------------------------------------------------- |
+| `AZURE_WEBAPP_NAME`            | The app name (e.g. `remix-sso-starter`). Becomes `<name>.azurewebsites.net`. |
+| `AZURE_WEBAPP_PUBLISH_PROFILE` | Full XML from `az webapp deployment list-publishing-profiles --xml`.         |
 
 ### Required App Service environment variables
 
