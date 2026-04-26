@@ -34,6 +34,17 @@ npm run dev
 Open <http://localhost:3000>. You should see two buttons: **Log in with
 Microsoft** and **Log in with Google**.
 
+### Debugging in VS Code
+
+`.vscode/launch.json` ships with five one-click launch configs (Run and
+Debug panel, or `F5`):
+
+- **Remix Dev Server** — `npm run dev` with the JS debugger attached
+- **Remix Production Server (built)** — `npm start` with `NODE_ENV=production`
+- **Vitest: Run All Tests**
+- **Vitest: Debug Current Test File** — uses `${relativeFile}`
+- **Vitest: Coverage**
+
 ## Environment
 
 The app reads its configuration from `process.env`. In dev, the easiest path
