@@ -21,8 +21,23 @@ Actions.
 - `app/routes/api.auth.$provider.login_callback.ts` — handles both GET (Google)
   and POST (AAD `form_post`) callbacks via `loader` + `action` exports.
 - `app/routes/api.auth.login.ts` — back-compat redirect to the Microsoft path.
+- `app/routes/api.auth.me.ts` — returns the normalized `AuthUser` from the
+  session cookie, or 401.
+- `app/routes/api.auth.logout.ts` — destroys the session cookie and redirects
+  home.
 - `app/utils/frontend/hooks/Auth.tsx` — `useMeProfile` hook for the frontend.
 - `.github/workflows/deploy-azure.yml` — CI/CD to Azure App Service.
+- `.vscode/launch.json` — Remix dev / prod / Vitest debug launch configs.
+
+## Type names
+
+- `AuthUser` (in `app/utils/backend/auth/types.ts`) is the normalized,
+  cross-provider profile stored in the session cookie. **This is the type
+  routes / hooks / components should use.**
+- `User` (in `app/types.d.ts`) is the legacy raw Microsoft Graph profile
+  shape. It's no longer stored anywhere — it's kept around as a reference
+  type for callers that need the Graph fields directly. Don't introduce
+  new dependencies on it.
 
 ## Conventions to follow
 
@@ -70,6 +85,11 @@ Service (Linux, Node 20)** on every push to `main`. We use App Service rather
 than Azure Functions because Remix is a long-lived HTTP server.
 
 ### Required GitHub Actions secrets
+
+Define these on a GitHub **Environment** named `azure-production` (Settings →
+Environments → New environment), not at the repo level. The workflow's
+`environment: azure-production` block scopes the publish profile behind that
+env's protection rules so you can require manual approval before each deploy.
 
 | Secret                         | What it is                                                                   |
 | ------------------------------ | ---------------------------------------------------------------------------- |
