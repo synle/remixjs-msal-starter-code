@@ -17,6 +17,12 @@ import { renderToPipeableStream } from "react-dom/server";
 
 const ABORT_DELAY = 5_000;
 
+/**
+ * Remix server entry — dispatches each request to a bot or browser SSR strategy
+ * based on the User-Agent. Bots render fully (`onAllReady`) so crawlers see a
+ * complete HTML payload; browsers stream from the shell (`onShellReady`) for
+ * lower TTFB.
+ */
 export default function handleRequest(
   request: Request,
   responseStatusCode: number,
@@ -39,6 +45,7 @@ export default function handleRequest(
       );
 }
 
+/** Renders the full HTML shell to a stream and resolves once `onAllReady` fires (bot-friendly). */
 function handleBotRequest(
   request: Request,
   responseStatusCode: number,
@@ -88,6 +95,7 @@ function handleBotRequest(
   });
 }
 
+/** Streams the HTML shell as soon as it's ready (`onShellReady`), letting the body hydrate progressively. */
 function handleBrowserRequest(
   request: Request,
   responseStatusCode: number,

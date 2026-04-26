@@ -1,3 +1,4 @@
+/** Generic MUI-styled paginated, sortable, filterable table built on top of `react-table` v7. */
 import React, { useMemo, useState, useRef } from "react";
 import {
   useTable,
@@ -21,13 +22,23 @@ import {
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 
+/** Row shape — any object whose values can be displayed in a table cell. */
 type Data = Record<string, any>;
 
+/** Props for the default exported DataTable component. */
 type DataTableProps = {
+  /** The rows to display. */
   data: Data;
+  /** `react-table` column definitions (Header, accessor, Cell, etc.). */
   columns: Column[];
 };
 
+/**
+ * Per-column filter input rendered in the table header.
+ *
+ * Debounces user typing by 500ms before pushing the value into `react-table`
+ * via `setFilter`, to avoid re-rendering the table on every keystroke.
+ */
 export const ColumnFilter: React.FC<{
   column: Column<Data>;
 }> = ({ column }) => {
@@ -62,6 +73,14 @@ export const ColumnFilter: React.FC<{
   );
 };
 
+/**
+ * Renders a paginated table with sort + per-column filter affordances.
+ *
+ * @remarks Uses `react-table` v7 hooks (`useTable`, `useFilters`, `useSortBy`,
+ * `usePagination`). Default page size is 50 and is currently fixed (the rows-per-page
+ * dropdown is shown but only offers 50 — extend `rowsPerPageOptions` to make it
+ * configurable).
+ */
 export default function ({ data, columns: columns }: DataTableProps) {
   const {
     getTableProps,

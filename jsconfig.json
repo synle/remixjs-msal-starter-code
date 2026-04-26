@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "checkJs": false,
+    "allowJs": true,
+    "jsx": "react-jsx",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "es2019",
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./app/*"]
+    }
+  },
+  "include": ["app/**/*", "remix.env.d.ts"],
+  "exclude": ["node_modules", "build", "public/build", "coverage"]
+}

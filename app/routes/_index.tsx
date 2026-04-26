@@ -1,8 +1,15 @@
+/** Root index route — renders the signed-in user's Graph profile as JSON, a sortable table, and a sample modal. */
 import { Box, Button, Paper } from "@mui/material";
 import { useActionDialogs } from "react-dialog-mui";
 import DataTable, { ColumnFilter } from "~/components/DataTable";
 import { useMeProfile } from "~/utils/frontend/hooks/Auth";
 
+/**
+ * Main page shown after the user is authenticated.
+ *
+ * Shows a `<pre>` JSON dump of the profile, a key/value DataTable view of the
+ * same data, and a "Test" button that opens a sample modal via `react-dialog-mui`.
+ */
 export default function Index() {
   const { data: profile, isLoading } = useMeProfile();
   const { modal } = useActionDialogs();
