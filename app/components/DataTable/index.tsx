@@ -101,7 +101,7 @@ export default function ({ data, columns: columns }: DataTableProps) {
     },
     useFilters,
     useSortBy,
-    usePagination
+    usePagination,
   );
 
   const { pageIndex, pageSize } = state;

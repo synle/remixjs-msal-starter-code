@@ -22,7 +22,7 @@ describe("Loading", () => {
 
   it("renders inside a plain Box when containerType is 'box'", () => {
     const { container } = render(
-      <Loading containerType="box">Working</Loading>
+      <Loading containerType="box">Working</Loading>,
     );
     // No alert role when containerType is 'box'
     expect(container.querySelector('[role="alert"]')).toBeNull();

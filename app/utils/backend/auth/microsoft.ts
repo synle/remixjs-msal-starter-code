@@ -66,7 +66,7 @@ export function normalizeMicrosoftProfile(profile: GraphMeProfile): AuthUser {
     .toLowerCase();
   if (!email) {
     throw new Error(
-      "microsoft profile is missing both mail and userPrincipalName"
+      "microsoft profile is missing both mail and userPrincipalName",
     );
   }
   return {
@@ -78,7 +78,7 @@ export function normalizeMicrosoftProfile(profile: GraphMeProfile): AuthUser {
 }
 
 async function _getUserInformation(
-  accessToken: string
+  accessToken: string,
 ): Promise<GraphMeProfile> {
   const { data } = await axios.get<GraphMeProfile>(
     "https://graph.microsoft.com/v1.0/me",
@@ -87,7 +87,7 @@ async function _getUserInformation(
         Authorization: `Bearer ${accessToken}`,
         Accept: "application/json",
       },
-    }
+    },
   );
   return data;
 }
