@@ -144,7 +144,7 @@ No route code changes are required — the dynamic `:provider` segment dispatche
 | `npm run test-ci`   | Run vitest once with coverage (used by CI)        |
 | `npm run coverage`  | Same as `test-ci` — alias                         |
 | `npm run typecheck` | Run TypeScript without emitting                   |
-| `npm run format`    | Run oxfmt across the repo                        |
+| `npm run format`    | Run oxfmt across the repo                         |
 
 ## Deployment
 
