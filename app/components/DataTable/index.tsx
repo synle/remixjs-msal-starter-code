@@ -81,7 +81,7 @@ export const ColumnFilter: React.FC<{
  * dropdown is shown but only offers 50 — extend `rowsPerPageOptions` to make it
  * configurable).
  */
-export default function ({ data, columns: columns }: DataTableProps) {
+export default function ({ data, columns }: DataTableProps) {
   const {
     getTableProps,
     getTableBodyProps,
