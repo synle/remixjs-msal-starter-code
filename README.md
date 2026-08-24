@@ -144,20 +144,14 @@ No route code changes are required — the dynamic `:provider` segment dispatche
 | `npm run test-ci`   | Run vitest once with coverage (used by CI)        |
 | `npm run coverage`  | Same as `test-ci` — alias                         |
 | `npm run typecheck` | Run TypeScript without emitting                   |
-| `npm run format`    | Run Prettier across the repo                      |
+| `npm run format`    | Run oxfmt across the repo                        |
 
 ## Deployment
 
-This repo ships with a GitHub Actions workflow that builds and deploys to
-**Azure App Service (Web App)**. See `.github/workflows/deploy-azure.yml` and
-the [Azure deployment](#azure-deployment) section below.
-
-### Azure deployment
-
-We use **Azure App Service (Linux, Node)** rather than Azure Functions: a
-Remix server is a long-lived Node process serving HTTP, which is exactly what
-App Service runs natively. Functions would force us into a custom handler
-shim and lose streaming.
+Deploys to **Azure App Service (Linux, Node)** via
+[`.github/workflows/deploy-azure.yml`](.github/workflows/deploy-azure.yml).
+App Service rather than Azure Functions because a Remix server is a long-lived
+Node HTTP process; Functions would need a custom handler shim and lose streaming.
 
 #### One-time Azure setup
 
@@ -198,12 +192,8 @@ shim and lose streaming.
        AUTH_BASE_HOST_URL=https://<your-app-name>.azurewebsites.net
    ```
 
-4. **Register the production redirect URIs** with both IdPs:
-
-   - Azure AD → App registrations → your app → Authentication → Web →
-     `https://<your-app-name>.azurewebsites.net/api/auth/microsoft/login_callback`
-   - Google Cloud → Credentials → your OAuth client → Authorized redirect URIs →
-     `https://<your-app-name>.azurewebsites.net/api/auth/google/login_callback`
+4. **Register the production redirect URIs** with both IdPs — same steps as
+   above, with `https://<your-app-name>.azurewebsites.net` as the host.
 
 5. **Get a publish profile** for GitHub Actions:
    ```bash
