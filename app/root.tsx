@@ -45,7 +45,8 @@ function _getInitials(fullName: string) {
 }
 
 /** Remix `links` export — wires in the css-bundle stylesheet when available. */
-export const links: LinksFunction = () => (cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []);
+export const links: LinksFunction = () =>
+  cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : [];
 
 const theme = createTheme({});
 const queryClient = new QueryClient({
